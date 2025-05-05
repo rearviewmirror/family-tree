@@ -6,7 +6,7 @@
   "homepage": "https://rearviewmirrow.github.io/family-tree",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && echo 'nashera-miabari.shahbazkhan.co.uk' > dist/CNAME",
     "lint": "eslint .",
     "preview": "vite preview",
     "deploy": "gh-pages -d dist"
