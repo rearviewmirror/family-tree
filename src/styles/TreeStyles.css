@@ -7,6 +7,7 @@
   min-width: 100vw;
   background-color: #f9f9f9;
   overflow: auto;
+  max-width: 100%;
 }
 
 .tree-node {
@@ -35,12 +36,14 @@
 
 /* Box around each person's info */
 .node-content {
-  background: white;
-  padding: 0.5rem 1rem;
+  background: var(--pastel-card-background); /* Or pick a soft pastel hex like #fef6fb */
+  border: 2px solid var(--pastel-border);    /* e.g., #e0c3fc or any pastel border color */
+  padding: 1rem;
   border-radius: 0.5rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
   text-align: center;
-  font-size: 14px;
+  color: var(--pastel-text);                /* Or fallback like #333 */
   min-width: 140px;
   position: relative;
   z-index: 2;
@@ -54,15 +57,6 @@
   margin-top: 4px;
 }
 
-/* Expand/Collapse Button */
-.expand-btn {
-  background: none;
-  border: none;
-  color: #007bff;
-  font-size: 12px;
-  margin-top: 4px;
-  cursor: pointer;
-}
 
 /* Children container */
 .tree-children {
@@ -71,6 +65,7 @@
   margin-top: 2rem;
   position: relative;
   padding-top: 1rem;
+  transition: all 0.3s ease-in-out;
 }
 
 /* Horizontal line connecting all children */
@@ -93,7 +88,63 @@
   left: 50%;
   width: 2px;
   height: 1rem;
-  background-color: #ccc;
+  background-color:var(--pastel-line-color);
   z-index: 1;
+}
+.node-content:hover {
+  background: var(--pastel-hover-background); /* e.g., #fef1f6 */
+  transform: scale(1.05);
+  transition: transform 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.expand-btn:hover {
+  color: var(--pastel-hover-text); /* e.g., #a4508b */
+}
+
+@media (max-width: 768px) {
+  .tree-container {
+    padding: 1rem;
+  }
+
+  .tree-node {
+    margin: 0.5rem;
+  }
+
+  .node-content {
+    font-size: 14px;
+    padding: 0.5rem;
+  }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.node-content {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@media print {
+  .expand-btn,
+  .profile-link {
+    display: none !important;
+  }
+
+  .tree-container {
+    overflow: visible !important;
+    zoom: 80%;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .node-content {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+  }
+
+  body {
+    background: white !important;
+  }
 }
 
