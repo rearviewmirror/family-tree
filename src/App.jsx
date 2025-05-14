@@ -5,16 +5,25 @@ import "./styles/TreeStyles.css";
 
 const App = () => {
   return (
-    <div className="w-full h-screen bg-gray-100 overflow-auto">
-      <h1 className="text-3xl font-bold text-center py-6 text-black">
-        Family Tree of Nashera Mia Bari
-      </h1>
-      <div className="tree-container">
-        <ul className="tree">
-          <TreeNode person={familyTree} isRoot={true} />
-        </ul>
+    <>
+      <div className="w-full min-h-screen bg-base-100 overflow-auto">
+        <h1 className="text-3xl font-bold text-primary text-center mt-4">
+          Family Tree of Nashera Mia Bari
+        </h1>
+        <div className="tree-container">
+          <ul className="tree">
+            <TreeNode person={familyTree} isRoot={true} />
+          </ul>
+        </div>
       </div>
-    </div>
+
+      {/* Footer with credit */}
+      <footer className="footer footer-center p-4 bg-base-300 text-base-content">
+        <aside>
+          <p>Built by Shahbaz Khan © {new Date().getFullYear()}</p>
+        </aside>
+      </footer>
+    </>
   );
 };
 

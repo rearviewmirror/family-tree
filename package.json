@@ -12,10 +12,12 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
+    "daisyui": "^5.0.35",
+    "papaparse": "^5.4.1",
     "react": "^19.0.0",
     "react-d3-tree": "^3.6.6",
-    "react-dom": "^19.0.0",
-    "papaparse": "^5.4.1"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",

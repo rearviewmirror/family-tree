@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/solid';
 import "../styles/TreeStyles.css";
 
 const TreeNode = ({ person, isRoot = false }) => {
@@ -7,27 +8,32 @@ const TreeNode = ({ person, isRoot = false }) => {
 
   return (
     <div className={`tree-node ${isRoot ? "root-node" : ""}`}>
-      <div className="node-content">
-        <strong style={{ color: "#333" }} >{person.name}</strong>
-        <div className="text-sm text-gray-600">{person.nameBn}</div>
-
-        {hasValidProfileLink && (
-          <a
-            href={person.social}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="profile-link"
-          >
-            Profile ↗
-          </a>
-        )}
-
-        {person.children?.length > 0 && (
-          <button onClick={() => setExpanded(!expanded)} className="expand-btn">
-            {expanded ? "− Collapse" : "+ Expand"}
-          </button>
-        )}
-      </div>
+      <div className="bg-white border border-primary rounded-md shadow-sm p-2 text-center w-36 text-xs">
+  <div className="font-bold text-gray-800">{person.name}</div>
+  <div className="text-gray-500 text-[11px]">{person.nameBn}</div>
+  {hasValidProfileLink && (
+    <a
+      href={person.social}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-blue-500 underline text-[10px]"
+    >
+      Profile ↗
+    </a>
+  )}
+  {person.children?.length > 0 && (
+    <div className="mt-1 text-right w-full">
+    <button onClick={() => setExpanded(!expanded)} className="text-xs px-2 py-1 rounded border border-base-content text-base-content hover:bg-base-content hover:text-base-100 transition duration-150"
+>
+      {expanded ? (
+        <ChevronUpIcon className="h-4 w-4" />
+      ) : (
+        <ChevronDownIcon className="h-4 w-4" />
+      )}
+    </button>
+    </div>
+  )}
+</div>
 
       {expanded && person.children?.length > 0 && (
         <div className="tree-children">

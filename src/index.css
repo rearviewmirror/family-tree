@@ -18,6 +18,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+html {
+  font-family: 'Inter', sans-serif;
+}
 a {
   font-weight: 500;
   color: #646cff;
@@ -33,11 +36,14 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  color: var(--pastel-text);
 }
 
-h1 {
+h1, h2, h3 {
   font-size: 3.2em;
   line-height: 1.1;
+  font-family: 'Poppins', sans-serif;
 }
 
 button {
