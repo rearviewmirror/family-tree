@@ -23,7 +23,8 @@ const TreeNode = ({ person, isRoot = false }) => {
   )}
   {person.children?.length > 0 && (
     <div className="mt-1 text-right w-full">
-    <button onClick={() => setExpanded(!expanded)} className="text-xs px-2 py-1 rounded border border-base-content text-base-content hover:bg-base-content hover:text-base-100 transition duration-150"
+    <button onClick={() => setExpanded(!expanded)} className="chevron-btn p-2 rounded-full border border-base-content text-base-content hover:bg-base-content hover:text-base-100 transition duration-150"
+      aria-label={expanded ? "Collapse" : "Expand"}
 >
       {expanded ? (
         <ChevronUpIcon className="h-4 w-4" />

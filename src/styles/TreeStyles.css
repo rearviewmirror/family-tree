@@ -6,9 +6,28 @@
   min-height: 100vh;
   min-width: 100vw;
   background-color: #f9f9f9;
-  overflow: auto;
+
+  overflow: auto;               /* Enables scroll */
+  scroll-behavior: smooth;      /* Smooth scrolling */
+  scrollbar-width: thin;        /* Firefox scrollbar */
+  margin: 0;
+  zoom: 80%;
   max-width: 100%;
+  
 }
+
+/* Optional: WebKit Scrollbar Styling (Chrome, Safari, Edge) */
+.tree-container::-webkit-scrollbar {
+  height: 8px;
+}
+.tree-container::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+.tree-container::-webkit-scrollbar-track {
+  background: #f0f0f0;
+}
+
 
 .tree-node {
   display: flex;
@@ -40,15 +59,16 @@
   border: 2px solid var(--pastel-border);    /* e.g., #e0c3fc or any pastel border color */
   padding: 1rem;
   border-radius: 0.5rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   font-size: 16px;
   text-align: center;
   color: var(--pastel-text);                /* Or fallback like #333 */
   min-width: 140px;
   position: relative;
   z-index: 2;
+  animation: fadeIn 0.3s ease-in-out;
 }
 
+  
 /* Link to profile */
 .profile-link {
   color: #007bff;
@@ -98,10 +118,6 @@
   cursor: pointer;
 }
 
-.expand-btn:hover {
-  color: var(--pastel-hover-text); /* e.g., #a4508b */
-}
-
 @media (max-width: 768px) {
   .tree-container {
     padding: 1rem;
@@ -116,32 +132,41 @@
     padding: 0.5rem;
   }
 }
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.node-content {
-  animation: fadeIn 0.3s ease-in-out;
-}
-
 @media print {
   .expand-btn,
   .profile-link {
     display: none !important;
   }
 
-  .tree-container {
-    overflow: visible !important;
-    zoom: 80%;
-    padding: 0 !important;
-    margin: 0 !important;
-  }
 
-  .node-content {
-    box-shadow: none !important;
-    border: 1px solid #ccc !important;
+  @media (max-width: 768px) {
+  .chevron-btn {
+    padding: 0.25rem;
+    background-color: transparent;
   }
+}
+
+@media print {
+  .chevron-btn {
+    display: none !important;
+  }
+}
+@media (max-width: 640px) {
+  .node-content {
+    font-size: 0.75rem;   /* Tailwind's text-xs */
+    padding: 0.5rem;      /* Smaller padding on small screens */
+  }
+}
+@media (min-width: 641px) {
+  .node-content {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}  
 
   body {
     background: white !important;
