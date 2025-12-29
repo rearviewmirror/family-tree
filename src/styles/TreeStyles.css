@@ -1,24 +1,78 @@
 .tree-container {
   display: flex;
-  justify-content: center;
   align-items: flex-start;
   padding: 2rem;
   min-height: 100vh;
-  min-width: 100vw;
+  width: 100%;
   background-color: #f9f9f9;
-
-  overflow: auto;               /* Enables scroll */
-  scroll-behavior: smooth;      /* Smooth scrolling */
-  scrollbar-width: thin;        /* Firefox scrollbar */
+  overflow-x: auto;
+  overflow-y: auto;
+  scrollbar-width: thin;
   margin: 0;
-  zoom: 80%;
-  max-width: 100%;
+  position: relative;
+}
+
+/* Base tree styles */
+ul.tree {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: block;
+  width: 100%;
+}
+
+/* Mobile tree styles */
+@media (max-width: 768px) {
+  ul.tree {
+    min-width: max-content;
+  }
+}
+
+/* Desktop-specific container styles */
+@media (min-width: 769px) {
+  .tree-container {
+    /* Use flexbox for proper centering - simpler approach */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    zoom: 80%;
+    padding: 2rem;
+    scroll-behavior: auto;
+    overflow-anchor: none;
+    contain: layout;
+  }
   
+  /* The tree as a block element */
+  .tree-container > ul.tree {
+    display: block;
+    width: max-content;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  
+  /* Prevent focus and layout-based scrolling */
+  .tree-container * {
+    scroll-margin: 0 !important;
+    scroll-padding: 0 !important;
+  }
+}
+
+/* Mobile-specific container styles */
+@media (max-width: 768px) {
+  .tree-container {
+    justify-content: flex-start; /* Left-align for mobile */
+    zoom: 70%; /* Smaller zoom for mobile */
+    padding: 1rem;
+    min-width: max-content; /* Allow container to grow with content */
+    scroll-behavior: smooth; /* Keep smooth scrolling on mobile */
+  }
 }
 
 /* Optional: WebKit Scrollbar Styling (Chrome, Safari, Edge) */
 .tree-container::-webkit-scrollbar {
   height: 8px;
+  width: 8px;
 }
 .tree-container::-webkit-scrollbar-thumb {
   background: #ccc;
@@ -28,12 +82,54 @@
   background: #f0f0f0;
 }
 
+/* Mobile scrollbar - make it more visible */
+@media (max-width: 768px) {
+  .tree-container::-webkit-scrollbar {
+    height: 12px;
+  }
+  .tree-container::-webkit-scrollbar-thumb {
+    background: #999;
+    border-radius: 6px;
+  }
+}
+
 
 .tree-node {
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
+  /* Ensure each tree node is a self-contained block */
+  isolation: isolate;
+  /* Ensure proper spacing */
+  margin: 0;
+  padding: 0;
+}
+
+/* Desktop-specific tree node styles */
+@media (min-width: 769px) {
+  .tree-node {
+    /* Keep flexbox for proper tree structure */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 0;
+    /* Create a clear boundary for each node's children */
+    contain: layout;
+    /* Prevent scroll-related issues */
+    scroll-margin: 0;
+    scroll-padding: 0;
+  }
+  
+  /* Ensure children are properly contained within their parent */
+  .tree-node > .tree-children {
+    position: relative;
+    clear: both;
+    z-index: 1;
+    /* Prevent any scroll behavior */
+    scroll-margin: 0;
+    scroll-padding: 0;
+  }
 }
 
 /* No top connector for root */
@@ -78,14 +174,88 @@
 }
 
 
-/* Children container */
+/* Children container - base styles */
 .tree-children {
   display: flex;
+  flex-direction: row;
   justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
   margin-top: 2rem;
   position: relative;
   padding-top: 1rem;
-  transition: all 0.3s ease-in-out;
+  width: 100%;
+}
+
+/* Desktop children layout */
+@media (min-width: 769px) {
+  .tree-children {
+    /* Use flexbox but with strict scroll prevention */
+    display: flex !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    flex-wrap: wrap !important;
+    gap: 1rem 0.5rem;
+    /* Disable transitions on desktop to prevent auto-scroll */
+    transition: none;
+    /* Ensure proper spacing and containment */
+    width: 100%;
+    margin-top: 2rem;
+    padding: 0 1rem;
+    /* Prevent any scroll-related behavior */
+    scroll-margin: 0;
+    scroll-padding: 0;
+    /* Strict containment to prevent layout changes from affecting scroll */
+    contain: strict;
+  }
+  
+  .tree-children > .tree-node {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    /* Ensure each child maintains its own hierarchical space */
+    margin: 0;
+    position: relative;
+    margin-bottom: 1rem;
+    /* Better spacing for individual nodes */
+    width: auto;
+    min-width: 180px;
+    max-width: 220px;
+    /* Prevent scroll issues */
+    scroll-margin: 0;
+    scroll-padding: 0;
+  }
+  
+  /* Ensure proper vertical stacking of tree levels */
+  .tree-node .tree-children {
+    margin-top: 3rem;
+    width: 100%;
+    position: relative;
+    z-index: auto;
+    /* Prevent scroll interference */
+    contain: layout;
+  }
+  
+  /* Special handling for deeply nested children */
+  .tree-node .tree-node .tree-children {
+    margin-top: 2.5rem;
+    padding: 0 0.5rem;
+  }
+}
+
+/* Mobile children layout */
+@media (max-width: 768px) {
+  .tree-children {
+    justify-content: center;
+    flex-wrap: nowrap; /* Don't wrap on mobile - horizontal scroll instead */
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    /* Allow children to extend beyond viewport for horizontal scrolling */
+    min-width: max-content;
+    /* Keep transitions on mobile */
+    transition: all 0.3s ease-in-out;
+  }
 }
 
 /* Horizontal line connecting all children */
@@ -93,11 +263,21 @@
   content: "";
   position: absolute;
   top: 0;
-  left: 0;
-  right: 0;
+  left: 10%;
+  right: 10%;
   height: 2px;
   background-color: #ccc;
   z-index: 1;
+}
+
+/* Desktop-specific connector lines */
+@media (min-width: 769px) {
+  .tree-children::before {
+    /* For desktop layouts, show the connector line */
+    left: 0;
+    right: 0;
+    display: block;
+  }
 }
 
 /* Vertical line from horizontal line to each child */
@@ -131,6 +311,42 @@
     font-size: 14px;
     padding: 0.5rem;
   }
+  
+  /* Better touch targets for mobile */
+  .chevron-btn {
+    padding: 0.75rem !important;
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border: 2px solid #333 !important;
+    min-width: 40px;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .chevron-btn:hover {
+    background-color: #333 !important;
+    border-color: #333 !important;
+    transform: scale(1.05);
+  }
+  
+  /* Force chevron icon color on mobile */
+  .chevron-btn svg {
+    color: #333 !important;
+    fill: #333 !important;
+  }
+  
+  .chevron-btn:hover svg {
+    color: white !important;
+    fill: white !important;
+  }
+  
+  /* Improve text readability on mobile */
+  .tree-node .font-bold {
+    font-size: 0.8rem;
+    line-height: 1.2;
+  }
 }
 @media print {
   .expand-btn,
@@ -143,6 +359,36 @@
   .chevron-btn {
     padding: 0.25rem;
     background-color: transparent;
+  }
+}
+
+/* Base chevron button styles */
+.chevron-btn {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Desktop-specific chevron styles */
+@media (min-width: 769px) {
+  .chevron-btn {
+    padding: 0.5rem;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid #ccc;
+  }
+  
+  .chevron-btn:hover {
+    background-color: #333;
+    border-color: #333;
+  }
+  
+  /* Ensure chevron icons are visible on desktop */
+  .chevron-btn svg {
+    color: #333;
+    fill: #333;
+  }
+  
+  .chevron-btn:hover svg {
+    color: white;
+    fill: white;
   }
 }
 
@@ -172,4 +418,3 @@
     background: white !important;
   }
 }
-
