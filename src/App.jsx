@@ -14,7 +14,7 @@ const App = () => {
         </h1>
         <div className="tree-container">
           <ul className="tree">
-            <TreeNode person={familyTree} isRoot={true} scrollContainerRef={containerRef} />
+            <TreeNode person={familyTree} isRoot={true} depth={0} scrollContainerRef={containerRef} />
           </ul>
         </div>
       </div>
