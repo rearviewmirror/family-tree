@@ -1,10 +1,12 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/solid';
+import { ExpandedNodeContext } from "../context/ExpandedNodeContext";
 import "../styles/TreeStyles.css";
 
-const TreeNode = ({ person, isRoot = false, depth = 0, scrollContainerRef }) => {
+const TreeNode = ({ person, isRoot = false, depth = 0, scrollContainerRef, parentId = null }) => {
   const [expanded, setExpanded] = useState(false);
   const nodeRef = useRef(null);
+  const expandedNodeContext = useContext(ExpandedNodeContext);
   const hasValidProfileLink = person.social && /^https?:\/\/[^\s/$.?#].[^\s]*$/.test(person.social.trim());
 
   // Color mapping by depth/generation level
@@ -17,6 +19,21 @@ const TreeNode = ({ person, isRoot = false, depth = 0, scrollContainerRef }) => 
       'bg-purple-50 border-purple-300', // Level 4+
     ];
     return colors[Math.min(depth, colors.length - 1)];
+  };
+
+  // Handle expand/collapse with single-expand-per-level support
+  const handleToggleExpand = () => {
+    const newExpandedState = !expanded;
+    
+    if (newExpandedState && expandedNodeContext && expandedNodeContext.singleExpandPerLevel && parentId) {
+      // When expanding in single-expand mode, collapse siblings by tracking this parent's expanded child
+      expandedNodeContext.setExpandedNode(parentId, person.id);
+    } else if (!newExpandedState && expandedNodeContext && expandedNodeContext.singleExpandPerLevel && parentId) {
+      // When collapsing, clear this node from expanded tracking
+      expandedNodeContext.clearExpandedNode(parentId);
+    }
+    
+    setExpanded(newExpandedState);
   };
 
   // Simplified scroll behavior: center the node when expanded
@@ -34,6 +51,18 @@ const TreeNode = ({ person, isRoot = false, depth = 0, scrollContainerRef }) => 
       return () => clearTimeout(timeoutId);
     }
   }, [expanded]);
+
+  // In single-expand mode, auto-collapse if a sibling got expanded
+  useEffect(() => {
+    if (expandedNodeContext && expandedNodeContext.singleExpandPerLevel && parentId && expanded) {
+      const expandedChild = expandedNodeContext.expandedNodes[parentId];
+      
+      // If a different sibling is now expanded, collapse this one
+      if (expandedChild && expandedChild !== person.id) {
+        setExpanded(false);
+      }
+    }
+  }, [expandedNodeContext?.expandedNodes, parentId, person.id, expandedNodeContext?.singleExpandPerLevel, expanded]);
 
   return (
     <div className={`tree-node ${isRoot ? "root-node" : ""}`} ref={nodeRef}>
@@ -54,7 +83,7 @@ const TreeNode = ({ person, isRoot = false, depth = 0, scrollContainerRef }) => 
           <div className="mt-2 flex justify-center w-full">
             <button
               onClick={(e) => {
-                setExpanded(!expanded);
+                handleToggleExpand();
                 // Blur the button to prevent browser autoscroll on focus
                 e.target.blur();
               }}
@@ -78,6 +107,7 @@ const TreeNode = ({ person, isRoot = false, depth = 0, scrollContainerRef }) => 
               key={child.id}
               person={child}
               depth={depth + 1}
+              parentId={person.id}
               scrollContainerRef={scrollContainerRef}
             />
           ))}

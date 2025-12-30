@@ -1,5 +1,98 @@
 # Changelog
 
+## December 30, 2025 - Single-Expand-Per-Level Feature Implementation
+
+### 🎯 Major Changes
+
+#### **Single-Expand-Per-Level (Accordion Mode)** - COMPLETED & TESTED ✅
+- **Feature**: Only one sibling can be expanded at a time (when enabled)
+- **Problem Solved**: Prevents width explosion when multiple large sibling branches expand
+- **Configuration**: Controlled by `TREE_CONFIG.singleExpandPerLevel` flag in [src/config/treeConfig.js](src/config/treeConfig.js)
+
+**Implementation Details**:
+- Created [src/context/ExpandedNodeContext.jsx](src/context/ExpandedNodeContext.jsx) - React Context for tracking expanded nodes
+- Created [src/config/treeConfig.js](src/config/treeConfig.js) - Feature flags and configuration
+- Modified [src/components/TreeNode.jsx](src/components/TreeNode.jsx):
+  - Added `parentId` prop (passed through entire tree)
+  - Updated `handleToggleExpand()` to use Context API
+  - Added `useEffect` hook to auto-collapse siblings when another expands
+  - Integrated `ExpandedNodeContext` consumption
+- Modified [src/App.jsx](src/App.jsx):
+  - Wrapped with `ExpandedNodeProvider` component
+  - Passes `singleExpandPerLevel` configuration to provider
+
+**How It Works**:
+```javascript
+// Context tracks: { parentId: expandedChildId }
+// When child P1.1 expands:
+- setExpandedNode(parentId='P1', nodeId='P1.1')
+
+// When sibling P1.2 expands:
+- setExpandedNode(parentId='P1', nodeId='P1.2')
+- useEffect in P1.1 detects context change
+- P1.1 auto-collapses (setExpanded(false))
+- Only P1.2 remains open under parent P1
+```
+
+**Bug Fixed During Implementation**:
+- Initial implementation tracked by node ID - multiple siblings could expand
+- Fixed by tracking `{ parentId: expandedChildId }` instead
+- Added `parentId` prop to identify siblings
+- Added auto-collapse logic via useEffect
+
+**Configuration**:
+```javascript
+// In src/config/treeConfig.js
+export const TREE_CONFIG = {
+  singleExpandPerLevel: true,  // Set to false for multi-expand mode
+};
+```
+
+### 📝 Files Modified
+
+1. **[src/context/ExpandedNodeContext.jsx](src/context/ExpandedNodeContext.jsx)** - NEW
+   - Provider component for expanded node state
+   - Functions: setExpandedNode, clearExpandedNode, isNodeExpanded
+   - Props: singleExpandPerLevel (boolean)
+
+2. **[src/config/treeConfig.js](src/config/treeConfig.js)** - NEW
+   - Feature flags and configuration
+   - Currently: singleExpandPerLevel toggle
+
+3. **[src/components/TreeNode.jsx](src/components/TreeNode.jsx)** - Major refactor
+   - Added `parentId` prop to component signature
+   - Updated `handleToggleExpand()` to use Context
+   - Added `useEffect` to watch expanded nodes and auto-collapse
+   - Pass `parentId={person.id}` to children TreeNode renders
+   - Integrated `useContext(ExpandedNodeContext)`
+
+4. **[src/App.jsx](src/App.jsx)** - Configuration
+   - Imported TREE_CONFIG and ExpandedNodeProvider
+   - Wrapped JSX with `<ExpandedNodeProvider singleExpandPerLevel={TREE_CONFIG.singleExpandPerLevel}>`
+   - Imported ExpandedNodeContext
+
+### 🧪 Testing Results
+
+✅ **Feature Verified Working** (December 30, 2025)
+- Desktop: Expanding one sibling collapses previous sibling
+- Mobile: Single-expand behavior works on touch devices
+- Feature toggle: Can set `singleExpandPerLevel` to true/false
+- No console errors
+- Performance: No noticeable lag
+- Auto-collapse: Smooth and instantaneous
+
+### 🚀 User-Facing Improvements
+
+| Feature | Before | After |
+|---------|--------|-------|
+| Multiple siblings expanded | ✅ Possible | ❌ Prevented (when enabled) |
+| Tree width when expanding | 🔴 Can explode | ✅ Stays controlled |
+| Navigation behavior | 🔵 Exploratory (multi-expand) | 🟢 Focused (accordion) |
+| Breadcrumb-like behavior | ❌ None | ✅ Available (when enabled) |
+| Configurability | ❌ Hardcoded | ✅ Toggle in config file |
+
+---
+
 ## December 29, 2025 - Scroll Logic Refactor & Color-by-Level Feature
 
 ### 🎯 Major Changes

@@ -5,8 +5,10 @@ An interactive family tree visualization for Nashera Mia Bari built with React, 
 ## Features
 
 - 📊 Interactive collapsible family tree visualization
+- 🔄 Single-expand-per-level mode (accordion-style navigation)
 - 🌍 Bilingual support (English & Bengali)
 - 📱 Responsive design (mobile & desktop)
+- 🎨 Color-coded by generation level (visual hierarchy)
 - 🔗 Social media profile links
 - 🎨 Beautiful UI with Tailwind CSS and DaisyUI
 - ⚡ Fast build and development with Vite
@@ -111,21 +113,26 @@ The deployed domain is set in:
 family-tree/
 ├── src/
 │   ├── components/
-│   │   └── TreeNode.jsx       # Individual tree node component
+│   │   └── TreeNode.jsx              # Individual tree node component
+│   ├── context/
+│   │   └── ExpandedNodeContext.jsx   # Context for tracking expanded nodes
+│   ├── config/
+│   │   └── treeConfig.js             # Feature flags and configuration
 │   ├── data/
-│   │   ├── familyData.js      # Parses CSV and builds tree structure
-│   │   └── familyTree.csv     # Family data in CSV format
+│   │   ├── familyData.js             # Parses CSV and builds tree structure
+│   │   └── familyTree.csv            # Family data in CSV format
 │   ├── styles/
-│   │   └── TreeStyles.css     # Custom tree styling
-│   ├── App.jsx                # Main app component
-│   ├── main.jsx               # Entry point
-│   └── index.css              # Global styles
-├── index.html                 # HTML entry point
-├── package.json               # Dependencies and scripts
-├── vite.config.js             # Vite configuration
-├── tailwind.config.cjs        # Tailwind CSS config
-├── postcss.config.cjs         # PostCSS config
-└── deploy.sh                  # Deployment script
+│   │   └── TreeStyles.css            # Custom tree styling
+│   ├── App.jsx                       # Main app component
+│   ├── main.jsx                      # Entry point
+│   └── index.css                     # Global styles
+├── index.html                        # HTML entry point
+├── package.json                      # Dependencies and scripts
+├── vite.config.js                    # Vite configuration
+├── tailwind.config.cjs               # Tailwind CSS config
+├── postcss.config.cjs                # PostCSS config
+├── deploy.sh                         # Deployment script
+└── CHANGELOG.md                      # Version history and changes
 ```
 
 ## Data Format
